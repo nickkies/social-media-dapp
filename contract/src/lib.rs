@@ -1,64 +1,37 @@
-// Find all our documentation at https://docs.near.org
 use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{log, near_bindgen};
+use near_sdk::{AccountId, near_bindgen};
+use near_sdk::serde::{Serialize, Deserialize};
+use near_sdk::collections::{UnorderedMap};
 
-// Define the default message
-const DEFAULT_MESSAGE: &str = "Hello";
+#[derive(BorshDeserialize, BorshSerialize, Serialize, Deserialize)]
+#[serde(crate = "near_sdk::serde")]
+#[derive(Clone)]
+pub struct Post {
+    id: u128,
+    title: String,
+    description: String,
+    tags: Vec<String>,
+    media: String,
+    user_who_liked: Vec<AccountId>,
+    owner_id: AccountId
+}
 
-// Define the contract structure
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct Contract {
-    message: String,
+pub struct SocialNetworking {
+    posts: UnorderedMap<u128, Post>,
+    number_of_posts: u128,
+    likes_by_user_id: UnorderedMap<AccountId, Vec<Post>>,
+    posts_by_tag: UnorderedMap<String, Vec<Post>>
 }
 
-// Define the default, which automatically initializes the contract
-impl Default for Contract{
-    fn default() -> Self{
-        Self{message: DEFAULT_MESSAGE.to_string()}
-    }
-}
-
-// Implement the contract structure
-#[near_bindgen]
-impl Contract {
-    // Public method - returns the greeting saved, defaulting to DEFAULT_MESSAGE
-    pub fn get_greeting(&self) -> String {
-        return self.message.clone();
-    }
-
-    // Public method - accepts a greeting, such as "howdy", and records it
-    pub fn set_greeting(&mut self, message: String) {
-        log!("Saving greeting {}", message);
-        self.message = message;
-    }
-}
-
-/*
- * The rest of this file holds the inline tests for the code above
- * Learn more about Rust tests: https://doc.rust-lang.org/book/ch11-01-writing-tests.html
- */
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn get_default_greeting() {
-        let contract = Contract::default();
-        // this test did not call set_greeting so should return the default "Hello" greeting
-        assert_eq!(
-            contract.get_greeting(),
-            "Hello".to_string()
-        );
-    }
-
-    #[test]
-    fn set_then_get_greeting() {
-        let mut contract = Contract::default();
-        contract.set_greeting("howdy".to_string());
-        assert_eq!(
-            contract.get_greeting(),
-            "howdy".to_string()
-        );
+impl Default for SocialNetworking {
+    fn default() -> Self {
+        Self {
+            posts: UnorderedMap::new(b'm'),
+            number_of_posts: 0,
+            likes_by_user_id: UnorderedMap::new(b'n'),
+            posts_by_tag: UnorderedMap::new(b'o')
+        }
     }
 }
