@@ -29,6 +29,7 @@ node_modules
 target
 dist
 frontend/.parcel-cache
+neardev
 
 npm-debug.log*
 yarn-debug.log*
