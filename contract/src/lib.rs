@@ -38,6 +38,19 @@ impl Default for SocialNetworking {
 
 #[near_bindgen]
 impl SocialNetworking {
+    pub fn add_posts_by_tag(&mut self, post: Post, tags: Vec<String>) {
+        let mut posts_for_tag: Vec<Post>;
+        for tag in tags {
+            if let None = self.posts_by_tag.get(&tag) {
+                posts_for_tag = Vec::<Post>::new();
+            } else {
+                posts_for_tag = self.posts_by_tag.get(&tag).unwrap();
+            }
+            posts_for_tag.push(post.clone());
+            self.posts_by_tag.insert(&tag, &posts_for_tag);
+        }
+    }
+
     pub fn add_post(
         &mut self, 
         title: String, 
@@ -63,6 +76,8 @@ impl SocialNetworking {
 
         self.posts.insert(&post.id, &post);
         self.number_of_posts += 1;
+
+        self.add_posts_by_tag(post.clone(), tags);
         
         post
     }
