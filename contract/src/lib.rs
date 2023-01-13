@@ -12,7 +12,7 @@ pub struct Post {
     description: String,
     tags: Vec<String>,
     media: String,
-    user_who_liked: Vec<AccountId>,
+    users_who_liked: Vec<AccountId>,
     owner_id: AccountId
 }
 
@@ -70,7 +70,7 @@ impl SocialNetworking {
             description,
             tags: tags.clone(),
             media,
-            user_who_liked: Vec::<AccountId>::new(),
+            users_who_liked: Vec::<AccountId>::new(),
             owner_id: env::signer_account_id()
         };
 
@@ -84,5 +84,26 @@ impl SocialNetworking {
 
     pub fn get_all_posts(&self) -> Vec<(u128, Post)> {
         self.posts.to_vec()
+    }
+
+    pub fn like_a_post(&mut self, post_id: u128) -> Post {
+        if let None = self.posts.get(&post_id) {
+            return Post {
+                id: post_id,
+                title: "No post found at that ID".to_string(),
+                description: "No post found at that ID".to_string(),
+                tags: Vec::<String>::new(),
+                media: "No post found at that ID".to_string(),
+                users_who_liked: Vec::<AccountId>::new(),
+                owner_id: env::signer_account_id()
+            };
+        }
+        let mut post = self.posts.get(&post_id).unwrap();
+        let sender_id = env::signer_account_id();
+        post.users_who_liked.push(sender_id.clone());
+
+        self.posts.insert(&post_id, &post);
+
+        post
     }
 }
