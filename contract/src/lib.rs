@@ -81,4 +81,8 @@ impl SocialNetworking {
         
         post
     }
+
+    pub fn get_all_posts(&self) -> Vec<(u128, Post)> {
+        self.posts.to_vec()
+    }
 }
