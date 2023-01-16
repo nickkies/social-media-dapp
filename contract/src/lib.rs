@@ -111,9 +111,16 @@ impl SocialNetworking {
         }
         let mut post = self.posts.get(&post_id).unwrap();
         let sender_id = env::signer_account_id();
+        let ids = post.users_who_liked.clone();
+
+        for id in ids.into_iter() {
+            if id == sender_id {
+                return post;
+            } 
+        }        
 
         post.users_who_liked.push(sender_id.clone());
-        
+
         self.posts.insert(&post_id, &post);
         self.add_post_to_my_liked(sender_id, post.clone());
         
