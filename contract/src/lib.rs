@@ -86,6 +86,17 @@ impl SocialNetworking {
         self.posts.to_vec()
     }
 
+    pub fn add_post_to_my_liked(&mut self, sender_id: AccountId, post: Post) {
+        let mut likes: Vec<Post>;
+        if let None = self.likes_by_user_id.get(&sender_id) {
+            likes = Vec::<Post>::new();
+        } else {
+            likes = self.likes_by_user_id.get(&sender_id).unwrap();
+        }
+        likes.push(post);
+        self.likes_by_user_id.insert(&sender_id, &likes);
+    }
+
     pub fn like_a_post(&mut self, post_id: u128) -> Post {
         if let None = self.posts.get(&post_id) {
             return Post {
@@ -100,10 +111,12 @@ impl SocialNetworking {
         }
         let mut post = self.posts.get(&post_id).unwrap();
         let sender_id = env::signer_account_id();
+
         post.users_who_liked.push(sender_id.clone());
-
+        
         self.posts.insert(&post_id, &post);
-
+        self.add_post_to_my_liked(sender_id, post.clone());
+        
         post
     }
 }
