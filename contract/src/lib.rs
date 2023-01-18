@@ -136,4 +136,12 @@ impl SocialNetworking {
             return my_liked_posts.unwrap();
         }
     }
+
+    pub fn get_posts_by_tag(&self, tag: String) -> Vec<Post> {
+        if let None = self.posts_by_tag.get(&tag) {
+            return Vec::<Post>::new();
+        }
+
+        return self.posts_by_tag.get(&tag).unwrap();
+    }
 }
