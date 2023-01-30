@@ -1,4 +1,30 @@
-import { NearBindgen, UnorderedMap } from 'near-sdk-js';
+import { near, NearBindgen, UnorderedMap, Vector } from 'near-sdk-js';
+
+class Post {
+  id: string;
+  title: string;
+  description: string;
+  tags: Vector;
+  media: string;
+  users_who_likded: Vector;
+  owner_id: string;
+
+  constructor(
+    id: string,
+    title: string,
+    description: string,
+    tags: Vector,
+    media: string
+  ) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.tags = tags;
+    this.media = media;
+    this.users_who_likded = new Vector('u');
+    this.owner_id = near.predecessorAccountId();
+  }
+}
 
 @NearBindgen({})
 class SocialMedia {
