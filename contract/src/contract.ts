@@ -1,4 +1,4 @@
-import { near, NearBindgen, UnorderedMap, Vector } from 'near-sdk-js';
+import { call, near, NearBindgen, UnorderedMap, Vector } from 'near-sdk-js';
 
 class Post {
   id: string;
@@ -38,5 +38,16 @@ class SocialMedia {
     this.number_of_posts = 0;
     this.likes_by_user_id = new UnorderedMap('l');
     this.posts_by_tag = new UnorderedMap('t');
+  }
+
+  @call({})
+  add_post({ title, description, tags, media }): Post {
+    const id = this.number_of_posts.toString();
+    const post = new Post(id, title, description, tags.split(','), media);
+
+    this.posts.set(id, post);
+    this.number_of_posts++;
+
+    return post;
   }
 }
