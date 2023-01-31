@@ -13,7 +13,7 @@ class Post {
   description: string;
   tags: Vector;
   media: string;
-  users_who_likded: Vector;
+  users_who_likded: string[];
   owner_id: string;
 
   constructor(
@@ -28,7 +28,7 @@ class Post {
     this.description = description;
     this.tags = tags;
     this.media = media;
-    this.users_who_likded = new Vector('u');
+    this.users_who_likded = [];
     this.owner_id = near.predecessorAccountId();
   }
 }
@@ -61,5 +61,25 @@ class SocialMedia {
   @view({})
   get_all_posts({}) {
     return this.posts.toArray();
+  }
+
+  @call({})
+  like_a_post({ postId }): Post {
+    postId = postId.toString();
+
+    if (!this.posts.get(postId)) return null;
+
+    const post = this.posts.get(postId) as Post;
+    const sender_id = near.predecessorAccountId();
+    // const users_who_liked = post.users_who_likded;
+
+    // users_who_liked.forEach((id) => {
+    //   if (id === sender_id) return post;
+    // });
+
+    post.users_who_likded.push(sender_id);
+    this.posts.set(postId, post);
+
+    return post;
   }
 }
