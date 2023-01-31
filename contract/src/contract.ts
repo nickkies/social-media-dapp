@@ -1,4 +1,11 @@
-import { call, near, NearBindgen, UnorderedMap, Vector } from 'near-sdk-js';
+import {
+  call,
+  near,
+  NearBindgen,
+  UnorderedMap,
+  Vector,
+  view,
+} from 'near-sdk-js';
 
 class Post {
   id: string;
@@ -49,5 +56,10 @@ class SocialMedia {
     this.number_of_posts++;
 
     return post;
+  }
+
+  @view({})
+  get_all_posts({}) {
+    return this.posts.toArray();
   }
 }
