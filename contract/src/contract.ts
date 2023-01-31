@@ -71,11 +71,10 @@ class SocialMedia {
 
     const post = this.posts.get(postId) as Post;
     const sender_id = near.predecessorAccountId();
-    // const users_who_liked = post.users_who_likded;
+    const users_who_liked = post.users_who_likded;
 
-    // users_who_liked.forEach((id) => {
-    //   if (id === sender_id) return post;
-    // });
+    for (let i = 0; i < users_who_liked.length; i++)
+      if (users_who_liked[i] === sender_id) return post;
 
     post.users_who_likded.push(sender_id);
     this.posts.set(postId, post);
