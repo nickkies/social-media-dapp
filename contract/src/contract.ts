@@ -66,6 +66,10 @@ class SocialMedia {
   @call({})
   clear_all_posts({}): string {
     this.posts = new UnorderedMap('p');
+    this.number_of_posts = 0;
+    this.likes_by_user_id = new UnorderedMap('l');
+    this.posts_by_tag = new UnorderedMap('t');
+
     return 'all posts are cleared';
   }
 
@@ -85,6 +89,29 @@ class SocialMedia {
     post.users_who_likded.push(sender_id);
     this.posts.set(postId, post);
 
+    this.add_post_to_my_liked(sender_id, post);
+
     return post;
+  }
+
+  add_post_to_my_liked(sender_id: string, post: Post): void {
+    let likes: Post[] = [];
+    if (this.likes_by_user_id.get(sender_id)) {
+      likes = this.likes_by_user_id.get(sender_id) as Post[];
+    }
+
+    likes.push(post);
+    this.likes_by_user_id.set(sender_id, likes);
+  }
+
+  @call({})
+  get_my_liked_posts({}): Post[] {
+    const sender_id = near.predecessorAccountId();
+
+    if (this.likes_by_user_id.get(sender_id)) {
+      return this.likes_by_user_id.get(sender_id) as Post[];
+    } else {
+      return [];
+    }
   }
 }
