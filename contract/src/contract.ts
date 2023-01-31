@@ -64,6 +64,12 @@ class SocialMedia {
   }
 
   @call({})
+  clear_all_posts({}): string {
+    this.posts = new UnorderedMap('p');
+    return 'all posts are cleared';
+  }
+
+  @call({})
   like_a_post({ postId }): Post {
     postId = postId.toString();
 
