@@ -24,9 +24,9 @@ export function AllPosts({ allPosts }) {
   return allPosts.map(({}) => (
     <>
       <h2>All Posts</h2>
-      {allPosts.map(([idx, { title }]) => (
-        <h3 key={idx}>{title}</h3>
-      ))}
+      {allPosts
+        ? allPosts.map(([idx, { title }]) => <h3 key={idx}>{title}</h3>)
+        : 'No Posts'}
     </>
   ));
 }
