@@ -108,11 +108,7 @@ class SocialMedia {
   }
 
   add_post_to_my_liked(sender_id: string, post: Post): void {
-    let likes: Post[] = [];
-    if (this.likes_by_user_id.get(sender_id)) {
-      likes = this.likes_by_user_id.get(sender_id) as Post[];
-    }
-
+    let likes: Post[] = (this.likes_by_user_id.get(sender_id) as Post[]) || [];
     likes.push(post);
     this.likes_by_user_id.set(sender_id, likes);
   }
