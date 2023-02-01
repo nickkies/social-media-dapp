@@ -19,3 +19,14 @@ export function SignOutButton({ accountId, onClick }) {
     </button>
   );
 }
+
+export function AllPosts({ allPosts }) {
+  return allPosts.map(({}) => (
+    <>
+      <h2>All Posts</h2>
+      {allPosts.map(([idx, { title }]) => (
+        <h3 key={idx}>{title}</h3>
+      ))}
+    </>
+  ));
+}
