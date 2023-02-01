@@ -47,13 +47,26 @@ class SocialMedia {
     this.posts_by_tag = new UnorderedMap('t');
   }
 
+  add_posts_by_tag(post: Post, tags: string[]) {
+    tags.forEach((tag) => {
+      const posts_for_tag: Post[] =
+        (this.posts_by_tag.get(tag) as Post[]) || [];
+
+      posts_for_tag.push(post);
+      this.posts_by_tag.set(tag, posts_for_tag);
+    });
+  }
+
   @call({})
   add_post({ title, description, tags, media }): Post {
     const id = this.number_of_posts.toString();
-    const post = new Post(id, title, description, tags.split(','), media);
+    tags = tags.split(',');
+    const post = new Post(id, title, description, tags, media);
 
     this.posts.set(id, post);
     this.number_of_posts++;
+
+    this.add_posts_by_tag(post, tags);
 
     return post;
   }
@@ -107,11 +120,11 @@ class SocialMedia {
   @call({})
   get_my_liked_posts({}): Post[] {
     const sender_id = near.predecessorAccountId();
+    return (this.likes_by_user_id.get(sender_id) as Post[]) || [];
+  }
 
-    if (this.likes_by_user_id.get(sender_id)) {
-      return this.likes_by_user_id.get(sender_id) as Post[];
-    } else {
-      return [];
-    }
+  @view({})
+  get_post_by_tag({ tag }) {
+    return this.posts_by_tag.get(tag) || [];
   }
 }
