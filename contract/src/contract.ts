@@ -13,7 +13,7 @@ class Post {
   description: string;
   tags: Vector;
   media: string;
-  users_who_likded: string[];
+  users_who_liked: string[];
   owner_id: string;
 
   constructor(
@@ -28,7 +28,7 @@ class Post {
     this.description = description;
     this.tags = tags;
     this.media = media;
-    this.users_who_likded = [];
+    this.users_who_liked = [];
     this.owner_id = near.predecessorAccountId();
   }
 }
@@ -94,12 +94,12 @@ class SocialMedia {
 
     const post = this.posts.get(postId) as Post;
     const sender_id = near.predecessorAccountId();
-    const users_who_liked = post.users_who_likded;
+    const users_who_liked = post.users_who_liked;
 
     for (let i = 0; i < users_who_liked.length; i++)
       if (users_who_liked[i] === sender_id) return post;
 
-    post.users_who_likded.push(sender_id);
+    post.users_who_liked.push(sender_id);
     this.posts.set(postId, post);
 
     this.add_post_to_my_liked(sender_id, post);
