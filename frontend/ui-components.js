@@ -20,13 +20,33 @@ export function SignOutButton({ accountId, onClick }) {
   );
 }
 
+function Post({
+  post: { title, owner_id, description, media, users_who_liked, tags },
+}) {
+  return (
+    <div>
+      <h3>{title}</h3>
+      <p>Posted by {owner_id}</p>
+      <img src={media} width='500' />
+      <p>{description}</p>
+      {tags.map((tag, idx) => (
+        <i key={idx}>#{tag}&nbsp;</i>
+      ))}
+      <p>Likes: {users_who_liked.length}</p>
+      <br />
+    </div>
+  );
+}
+
 export function AllPosts({ allPosts }) {
-  return allPosts.map(({}) => (
+  console.dir(allPosts);
+  return (
     <>
       <h2>All Posts</h2>
       {allPosts
-        ? allPosts.map(([idx, { title }]) => <h3 key={idx}>{title}</h3>)
+        ? allPosts.map(([idx, post]) => <Post key={idx} post={post} />)
         : 'No Posts'}
+      <br />
     </>
-  ));
+  );
 }
