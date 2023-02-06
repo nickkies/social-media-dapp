@@ -20,6 +20,59 @@ export function SignOutButton({ accountId, onClick }) {
   );
 }
 
+export function AddPost({ setUiPleaseWait, contract, setAllPosts }) {
+  const titleRef = React.useRef(null);
+  const descriptionRef = React.useRef(null);
+  const tagsRef = React.useRef(null);
+  const mediaRef = React.useRef(null);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setUiPleaseWait(true);
+    contract
+      .add_post({
+        title: titleRef.current.value,
+        description: descriptionRef.current.value,
+        tags: tagsRef.current.value,
+        media: mediaRef.current.value,
+      })
+      .then(async () => contract.get_all_posts())
+      .then(setAllPosts)
+      .finally(() => {
+        setUiPleaseWait(false);
+      });
+  };
+
+  return (
+    <>
+      <h2>Add Post</h2>
+      <form onSubmit={onSubmit}>
+        <label htmlFor='title'>Title</label>
+        <br />
+        <input ref={titleRef} id='title' placeholder='title' />
+        <br />
+        <label htmlFor='description'>Description</label>
+        <br />
+        <input
+          ref={descriptionRef}
+          id='description'
+          placeholder='description'
+        />
+        <br />
+        <label htmlFor='tags'>Tags</label>
+        <br />
+        <input ref={tagsRef} id='tags' placeholder='tag1,tag2' />
+        <br />
+        <label htmlFor='media'>Media</label>
+        <br />
+        <input ref={mediaRef} id='media' placeholder='media' />
+        <br />
+        <button>Upload Post</button>
+      </form>
+    </>
+  );
+}
+
 function Post({
   post: { title, owner_id, description, media, users_who_liked, tags },
 }) {
@@ -39,7 +92,6 @@ function Post({
 }
 
 export function AllPosts({ allPosts }) {
-  console.dir(allPosts);
   return (
     <>
       <h2>All Posts</h2>

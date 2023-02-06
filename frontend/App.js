@@ -3,7 +3,12 @@ import React from 'react';
 
 import './assets/global.css';
 
-import { SignInPrompt, SignOutButton, AllPosts } from './ui-components';
+import {
+  SignInPrompt,
+  SignOutButton,
+  AllPosts,
+  AddPost,
+} from './ui-components';
 
 export default function App({ isSignedIn, contract, wallet }) {
   const [uiPleaseWait, setUiPleaseWait] = React.useState(true);
@@ -33,6 +38,11 @@ export default function App({ isSignedIn, contract, wallet }) {
       />
       <main className={uiPleaseWait ? 'please-wait' : ''}>
         <h1>Social Media NEAR Dapp</h1>
+        <AddPost
+          setAllPosts={setAllPosts}
+          contract={contract}
+          setUiPleaseWait={setUiPleaseWait}
+        />
         <AllPosts allPosts={allPosts} />
       </main>
     </>
