@@ -22,4 +22,11 @@ export class Contract {
       args: { postId },
     });
   }
+
+  async get_posts_by_tag(tag) {
+    return await this.wallet.viewMethod({
+      method: 'get_post_by_tag',
+      args: { tag },
+    });
+  }
 }

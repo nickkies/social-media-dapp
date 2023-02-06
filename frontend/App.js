@@ -8,6 +8,7 @@ import {
   SignOutButton,
   AllPosts,
   AddPost,
+  PostByTag,
 } from './ui-components';
 
 export default function App({ isSignedIn, contract, wallet }) {
@@ -38,6 +39,11 @@ export default function App({ isSignedIn, contract, wallet }) {
       />
       <main className={uiPleaseWait ? 'please-wait' : ''}>
         <h1>Social Media NEAR Dapp</h1>
+        <PostByTag
+          setAllPosts={setAllPosts}
+          contract={contract}
+          setUiPleaseWait={setUiPleaseWait}
+        />
         <AddPost
           setAllPosts={setAllPosts}
           contract={contract}

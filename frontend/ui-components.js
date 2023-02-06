@@ -108,20 +108,49 @@ function Post({
   );
 }
 
+export function PostByTag({ setUiPleaseWait, setAllPosts, contract }) {
+  const tagRef = React.useRef(null);
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setUiPleaseWait(true);
+    contract
+      .get_posts_by_tag(tagRef.current.value)
+      .then(setAllPosts)
+      .finally(() => {
+        setUiPleaseWait(false);
+      });
+  };
+
+  return (
+    <>
+      <form onSubmit={onSubmit}>
+        <label>Tag</label>
+        <input ref={tagRef} id='tag' placeholder='tag' />
+        <button>Get Posts By Tag</button>
+      </form>
+    </>
+  );
+}
+
 export function AllPosts({ allPosts, setUiPleaseWait, setAllPosts, contract }) {
   return (
     <>
       <h2>All Posts</h2>
       {allPosts
-        ? allPosts.map(([idx, post]) => (
-            <Post
-              key={idx}
-              post={post}
-              setUiPleaseWait={setUiPleaseWait}
-              setAllPosts={setAllPosts}
-              contract={contract}
-            />
-          ))
+        ? allPosts.map((item, idx) => {
+            const post = item[1] || item;
+
+            return (
+              <Post
+                key={idx}
+                post={post}
+                setUiPleaseWait={setUiPleaseWait}
+                setAllPosts={setAllPosts}
+                contract={contract}
+              />
+            );
+          })
         : 'No Posts'}
       <br />
     </>
