@@ -43,7 +43,12 @@ export default function App({ isSignedIn, contract, wallet }) {
           contract={contract}
           setUiPleaseWait={setUiPleaseWait}
         />
-        <AllPosts allPosts={allPosts} />
+        <AllPosts
+          allPosts={allPosts}
+          setUiPleaseWait={setUiPleaseWait}
+          setAllPosts={setAllPosts}
+          contract={contract}
+        />
       </main>
     </>
   );

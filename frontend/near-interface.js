@@ -15,4 +15,11 @@ export class Contract {
       args,
     });
   }
+
+  async like_a_post(postId) {
+    return await this.wallet.callMethod({
+      method: 'like_a_post',
+      args: { postId },
+    });
+  }
 }

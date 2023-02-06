@@ -74,8 +74,24 @@ export function AddPost({ setUiPleaseWait, contract, setAllPosts }) {
 }
 
 function Post({
-  post: { title, owner_id, description, media, users_who_liked, tags },
+  post: { id, title, owner_id, description, media, users_who_liked, tags },
+  setUiPleaseWait,
+  setAllPosts,
+  contract,
 }) {
+  const like_a_post = (e, id) => {
+    e.preventDefault();
+    setUiPleaseWait(true);
+
+    contract
+      .like_a_post(id)
+      .then(async () => contract.get_all_posts())
+      .then(setAllPosts)
+      .finally(() => {
+        setUiPleaseWait(false);
+      });
+  };
+
   return (
     <div>
       <h3>{title}</h3>
@@ -86,17 +102,26 @@ function Post({
         <i key={idx}>#{tag}&nbsp;</i>
       ))}
       <p>Likes: {users_who_liked.length}</p>
+      <button onClick={(e) => like_a_post(e, id)}>👍Like This Post</button>
       <br />
     </div>
   );
 }
 
-export function AllPosts({ allPosts }) {
+export function AllPosts({ allPosts, setUiPleaseWait, setAllPosts, contract }) {
   return (
     <>
       <h2>All Posts</h2>
       {allPosts
-        ? allPosts.map(([idx, post]) => <Post key={idx} post={post} />)
+        ? allPosts.map(([idx, post]) => (
+            <Post
+              key={idx}
+              post={post}
+              setUiPleaseWait={setUiPleaseWait}
+              setAllPosts={setAllPosts}
+              contract={contract}
+            />
+          ))
         : 'No Posts'}
       <br />
     </>
